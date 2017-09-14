@@ -119,6 +119,11 @@ import java.io.*;
  * @see     TreeMap
  * @see     Hashtable
  * @since   1.2
+ * HashMap继承自AbstractMap，实现了Map接口
+ * Map接口定义了所有Map子类必须实现的方法。Map接口中还定义了一个内部接口Entry
+ *  AbstractMap也实现了Map接口，并且提供了两个实现Entry的内部类：SimpleEntry和SimpleImmutableEntry
+ *
+ *  参考：　http://www.cnblogs.com/hzmark/archive/2012/12/24/HashMap.html
  */
 
 public class HashMap<K,V>
@@ -127,11 +132,13 @@ public class HashMap<K,V>
 {
 
     /**
+     * 默认的初始容量，必须是2的幂。
      * The default initial capacity - MUST be a power of two.
      */
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
 
     /**
+     * 最大容量（必须是2的幂且小于2的30次方，传入容量过大将被这个值替换）
      * The maximum capacity, used if a higher value is implicitly specified
      * by either of the constructors with arguments.
      * MUST be a power of two <= 1<<30.
@@ -139,6 +146,7 @@ public class HashMap<K,V>
     static final int MAXIMUM_CAPACITY = 1 << 30;
 
     /**
+     * 默认装载因子
      * The load factor used when none specified in constructor.
      */
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
@@ -149,16 +157,19 @@ public class HashMap<K,V>
     static final Entry<?,?>[] EMPTY_TABLE = {};
 
     /**
+     * Entry 为HashMap的一个内部类，实现了Map接口的内部接口Entry
+     * 存储数据的Entry数组，长度是2的幂。看到数组的内容了
      * The table, resized as necessary. Length MUST Always be a power of two.
      */
     transient Entry<K,V>[] table = (Entry<K,V>[]) EMPTY_TABLE;
 
-    /**
+    /**map中保存的键值对的数量
      * The number of key-value mappings contained in this map.
      */
     transient int size;
 
     /**
+     * 需要调整大小的极限值（容量*装载因子）
      * The next size value at which to resize (capacity * load factor).
      * @serial
      */
@@ -166,14 +177,14 @@ public class HashMap<K,V>
     // table will be created when inflated.
     int threshold;
 
-    /**
+    /**装载因子
      * The load factor for the hash table.
      *
      * @serial
      */
     final float loadFactor;
 
-    /**
+    /**map结构被改变的次数
      * The number of times this HashMap has been structurally modified
      * Structural modifications are those that change the number of mappings in
      * the HashMap or otherwise modify its internal structure (e.g.,
@@ -239,6 +250,8 @@ public class HashMap<K,V>
     transient int hashSeed = 0;
 
     /**
+     *  根据给定的初始容量的装载因子创建一个空的HashMap
+     * 初始容量小于0或装载因子小于等于0将报异常
      * Constructs an empty <tt>HashMap</tt> with the specified initial
      * capacity and load factor.
      *
@@ -262,7 +275,7 @@ public class HashMap<K,V>
         init();
     }
 
-    /**
+    /**根据指定容量创建一个空的HashMap
      * Constructs an empty <tt>HashMap</tt> with the specified initial
      * capacity and the default load factor (0.75).
      *
@@ -273,7 +286,7 @@ public class HashMap<K,V>
         this(initialCapacity, DEFAULT_LOAD_FACTOR);
     }
 
-    /**
+    /**使用默认的容量及装载因子构造一个空的HashMap
      * Constructs an empty <tt>HashMap</tt> with the default initial capacity
      * (16) and the default load factor (0.75).
      */
@@ -282,6 +295,7 @@ public class HashMap<K,V>
     }
 
     /**
+     * 通过传入的map创建一个HashMap，容量为默认容量（16）和(map.zise()/DEFAULT_LOAD_FACTORY)+1的较大者，装载因子为默认值
      * Constructs a new <tt>HashMap</tt> with the same mappings as the
      * specified <tt>Map</tt>.  The <tt>HashMap</tt> is created with
      * default load factor (0.75) and an initial capacity sufficient to
