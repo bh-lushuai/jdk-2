@@ -783,6 +783,13 @@ public class HashMap<K,V>
     }
 
     /**
+     * shallow copy介绍：http://blog.csdn.net/wangbiao007/article/details/52625099
+     *从HashMap的克隆方法可以看出这样的几点
+     1.HashMap的clone方法生成新的对象，新的对象有自己独立的存储空间。
+     2.虽然HashMap的clone方法生成了新的对象，但新的HashMap和原来的HashMap所存储的引用类型都是指向的同一存储空间。
+     3.新生成的HashMap中的数组属性table是开辟了新的空间的，只是table中的存储的值所指向的内存空间和原来的是一样的。这和我理解的浅拷贝的有点不一样。我理解的浅拷贝认为是对象中的引用属性指向的是同一内存地址，但HashMap中的table数组却不是指向同一地址，而是table里面的值指向同一地址。
+
+
      * Returns a shallow copy of this <tt>HashMap</tt> instance: the keys and
      * values themselves are not cloned.
      *
